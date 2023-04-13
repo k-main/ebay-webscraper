@@ -21,6 +21,7 @@ while [ $input ]
             echo Retrieving bulk data via wget...
             echo Clearing FilteredOutput.txt...
             > FilteredOutput.txt
+            > bin/save_loc.txt
             echo "Progress 1/4"
             pageNum=1
             tempReset=0
@@ -34,12 +35,9 @@ while [ $input ]
                     echo -n "Retrieving $pageNum/4: $lineNum"
                     #sleep .1
                     wget -q -O index$pageNum.html $lineNum
-                    head -n $pageNum wget-links.txt | tail -1 >> wget-temp.txt
                     pageNum=$(( $pageNum + 1 ))
                     tempReset=$(( $tempReset + 1))
                 done
-                #> wget-temp.txt
-                echo "... Done"
                 echo "Pushing output to bin... Done"
                 mv index* bin/
                 echo "Filtering... Done"
@@ -62,14 +60,29 @@ while [ $input ]
         ;;
         3)
             > FilteredOutput.txt
+            > bin/save_loc.txt
             python3 stringProcessor.py
             echo
         ;;
         4)
-            option='n'
-            linkNum=1
-            linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
 
+            linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
+            savePosition=$( more bin/save_loc.txt )
+
+            if [ $savePosition != 0 ]
+                then
+                echo "Continue from previous save point, $savePosition/$linkTotal? (Y/n)"
+                echo "'x' to return"
+                read val
+                if [ $val != 'n' ]
+                    then
+                    linkNum=$savePosition
+                    else
+                    linkNum=1
+                fi
+            fi
+
+            option=n
             while [ $option != 'x' ]
                 do
                 #clear
@@ -78,6 +91,7 @@ while [ $input ]
                 echo "Opening link $linkNum of $linkTotal"
                 hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
                 opera $hyperLink
+                echo $linkNum > bin/save_loc.txt
                 linkNum=$(( $linkNum + 1 ))
                 read option
                 done
