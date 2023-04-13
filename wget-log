@@ -1,0 +1,21 @@
+--2023-04-08 13:57:46--  https://www.ebay.com/sch/i.html?_from=R40
+Resolving www.ebay.com (www.ebay.com)... 23.204.250.188
+Connecting to www.ebay.com (www.ebay.com)|23.204.250.188|:443... connected.
+HTTP request sent, awaiting response... 302 Moved Temporarily
+Location: http://www.ebay.com/sch/allcategories/all-categories/?_rdc=1 [following]
+URL transformed to HTTPS due to an HSTS policy
+--2023-04-08 13:57:47--  https://www.ebay.com/sch/allcategories/all-categories/?_rdc=1
+Reusing existing connection to www.ebay.com:443.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: /n/all-categories [following]
+URL transformed to HTTPS due to an HSTS policy
+--2023-04-08 13:57:47--  https://www.ebay.com/n/all-categories
+Reusing existing connection to www.ebay.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘i.html?_from=R40’
+
+i.html?_from=R40                 [<=>                                           ]       0  --.-KB/s               i.html?_from=R40                 [ <=>                                          ] 306.19K  1.26MB/s               i.html?_from=R40                 [  <=>                                         ] 826.18K  1.84MB/s               i.html?_from=R40                 [   <=>                                        ] 874.00K  1.59MB/s    in 0.5s    
+
+2023-04-08 13:57:48 (1.59 MB/s) - ‘i.html?_from=R40’ saved [894981]
+
