@@ -18,25 +18,38 @@ while [ $input ]
     do
     case $input in
         1)
+            echo Retrieve:
+            echo "1) Macbooks Pros"
+            echo "2) Macbooks & Macbook Pros"
+            read entry
+            case $entry in
+                1)
+                    echo Selected: Macbook Pros
+                    pageNum=1
+                ;;
+                2)
+                    echo "Selected: Macbooks & Macbook Pros"
+                    pageNum=5
+                ;;
+            esac
             echo Retrieving bulk data via wget...
             echo Clearing FilteredOutput.txt...
+            echo Clearing bin/save_loc.txt...
             > FilteredOutput.txt
             > bin/save_loc.txt
-            echo "Progress 1/4"
-            pageNum=1
-            tempReset=0
-            while [ $pageNum -le 4 ];
+            pageLim=$(( $pageNum + 3 ))
+            fileNum=1
+            while [ $pageNum -le $pageLim ];
                 do 
                     clear
                     #echo Emulating Process
                     echo Retrieving bulk data via wget...
-                    echo "Progress $pageNum/4"
                     lineNum=$( head -n $pageNum wget-links.txt | tail -1 )
-                    echo -n "Retrieving $pageNum/4: $lineNum"
+                    echo -n "Retrieving $fileNum/4: $lineNum"
                     #sleep .1
-                    wget -q -O index$pageNum.html $lineNum
+                    wget -q -O index$fileNum.html $lineNum
                     pageNum=$(( $pageNum + 1 ))
-                    tempReset=$(( $tempReset + 1))
+                    fileNum=$(( $fileNum + 1 ))
                 done
                 echo "Pushing output to bin... Done"
                 mv index* bin/
@@ -67,8 +80,9 @@ while [ $input ]
         4)
 
             linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
-            savePosition=$( more bin/save_loc.txt )
+            savePosition=$( wc -l bin/save_loc.txt | cut -d " " -f 1 )
 
+            linkNum=1
             if [ $savePosition != 0 ]
                 then
                 echo "Continue from previous save point, $savePosition/$linkTotal? (Y/n)"
@@ -77,12 +91,10 @@ while [ $input ]
                 if [ $val != 'n' ]
                     then
                     linkNum=$savePosition
-                    else
-                    linkNum=1
                 fi
             fi
 
-            option=n
+            option='n'
             while [ $option != 'x' ]
                 do
                 #clear
