@@ -37,6 +37,7 @@ while [ $input ]
             echo Clearing bin/save_loc.txt...
             > FilteredOutput.txt
             > bin/save_loc.txt
+            echo '0' > bin/save_loc.txt
             pageLim=$(( $pageNum + 3 ))
             fileNum=1
             while [ $pageNum -le $pageLim ];
@@ -60,7 +61,7 @@ while [ $input ]
         ;;
         2)
             echo -n Clearing bin... 
-            rm bin/* 2>> error_log.txt
+            rm bin/index* 2>> error_log.txt
             if [ $? == 0 ]
                 then
                     echo OK.
@@ -74,16 +75,17 @@ while [ $input ]
         3)
             > FilteredOutput.txt
             > bin/save_loc.txt
+            echo '0' > bin/save_loc.txt
             python3 stringProcessor.py
             echo
         ;;
         4)
 
             linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
-            savePosition=$( wc -l bin/save_loc.txt | cut -d " " -f 1 )
+            savePosition=$( cat bin/save_loc.txt )
 
             linkNum=1
-            if [ $savePosition != 0 ]
+            if [ $savePosition != '0' ]
                 then
                 echo "Continue from previous save point, $savePosition/$linkTotal? (Y/n)"
                 echo "'x' to return"
