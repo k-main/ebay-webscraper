@@ -13,6 +13,10 @@ echo -n "Option: "
 read input
 }
 
+echo "==============Ebay Webscraper=============="
+echo Prerequisites: BeautifulSoup4, lxml
+sleep 2
+clear
 Menu
 while [ $input ]
     do
@@ -43,11 +47,9 @@ while [ $input ]
             while [ $pageNum -le $pageLim ];
                 do 
                     clear
-                    #echo Emulating Process
                     echo Retrieving bulk data via wget...
                     lineNum=$( head -n $pageNum wget-links.txt | tail -1 )
                     echo -n "Retrieving $fileNum/4: $lineNum"
-                    #sleep .1
                     wget -q -O index$fileNum.html $lineNum
                     pageNum=$(( $pageNum + 1 ))
                     fileNum=$(( $fileNum + 1 ))
@@ -99,12 +101,14 @@ while [ $input ]
             option='n'
             while [ $option != 'x' ]
                 do
-                #clear
+                clear
                 echo "Enter 'x' to exit"
                 echo "Enter any other key to continue"
                 echo "Opening link $linkNum of $linkTotal"
+                echo "[diagnostic log]:"
+
                 hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
-                opera $hyperLink
+                opera $hyperLink &
                 echo $linkNum > bin/save_loc.txt
                 linkNum=$(( $linkNum + 1 ))
                 read option
