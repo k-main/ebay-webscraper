@@ -14,8 +14,8 @@ read input
 }
 
 echo "==============Ebay Webscraper=============="
-echo Prerequisites: BeautifulSoup4, lxml
-sleep 2
+echo Prerequisites: python3-venv, BeautifulSoup4, lxml
+sleep 1
 clear
 Menu
 while [ $input ]
@@ -105,10 +105,8 @@ while [ $input ]
                 echo "Enter 'x' to exit"
                 echo "Enter any other key to continue"
                 echo "Opening link $linkNum of $linkTotal"
-                echo "[diagnostic log]:"
-
                 hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
-                opera $hyperLink &
+                firefox $hyperLink
                 echo $linkNum > bin/save_loc.txt
                 linkNum=$(( $linkNum + 1 ))
                 read option
