@@ -7,7 +7,7 @@ filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "mid-2014", "2015,", "locked", "mid-2010", "mid-2010,",
                     "locked,", "activation", "locked.", "keys", "chassis",
                     "display", "kb", "*screen", "screen*", "*display", "display*",
-                    "*cracked*"]
+                    "*cracked*", "2009", "crack"]
 
 
 class storeItem:
@@ -65,6 +65,8 @@ for i in range(4):
 
     itemDeleted=0
     inspectFilterPass=0
+    #temp disabling the main filtering stage
+    
     for item in itemList:
 
         itemObj = storeItem(item)
@@ -82,17 +84,22 @@ for i in range(4):
             print()
             print()
     
+
     postFilter+=len(itemList)
 
     itemObjList = []
     for item in itemList:
         itemObj = storeItem(item)
         itemObjList.append(itemObj)
-
+    
+    #temp disabling the output stage
+    
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
             output.write("\n")
+    
+
 
 
 print("Unfiltered item list length: {}".format(preFilter))
