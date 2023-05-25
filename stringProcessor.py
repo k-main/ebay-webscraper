@@ -1,5 +1,28 @@
 from bs4 import BeautifulSoup as bs
 
+filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
+                    "hdd", "lcd", "*lcd", "lcd*", "crack", "cracked", 
+                    "screen", "2010", "2011", "2012", "2013", "2014",
+                    "2015", "mid-2013", "battery", "ic-locked", "a1278",
+                    "mid-2014", "2015,", "locked", "mid-2010", "mid-2010,",
+                    "locked,", "activation", "locked.", "keys", "chassis",
+                    "display", "kb", "*screen", "screen*", "*display", "display*",
+                    "*cracked*"]
+
+
+class storeItem:
+    def __init__(self, rawData):
+        self.rawData = rawData
+        self.itemName = ''
+        self.itemLink = ''
+    def getItemName():
+        
+        return itemName
+    def getItemLink():
+        
+        return itemLink
+
+
 postFilter=0
 preFilter=0
 for i in range(4):
@@ -10,15 +33,7 @@ for i in range(4):
         itemList = []
         for tag in tags:
             itemList.append(tag)
-    
-    filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
-                        "hdd", "lcd", "*lcd", "lcd*", "crack", "cracked", 
-                        "screen", "2010", "2011", "2012", "2013", "2014",
-                        "2015", "mid-2013", "battery", "ic-locked", "a1278",
-                        "mid-2014", "2015,", "locked", "mid-2010", "mid-2010,",
-                        "locked,", "activation", "locked.", "keys", "chassis",
-                        "display", "kb", "*screen", "screen*", "*display", "display*",
-                        "*cracked*"]
+
     
     #The first filtered heading does not appear to contain any useful information
     itemList = itemList[1:]
@@ -38,7 +53,6 @@ for i in range(4):
                 i = i[1:]
                 if (i[len(i)-1] == ')'):
                     i = i[-1]
-
             #print(i)
             if i in filteredKeywords:
                 itemList.remove(item)
@@ -51,7 +65,6 @@ for i in range(4):
             print()
     
     postFilter+=len(itemList)
-
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemList:
             linkStr=str(item)[425:].split(" ")[0]
