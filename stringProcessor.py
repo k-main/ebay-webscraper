@@ -7,20 +7,43 @@ filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "mid-2014", "2015,", "locked", "mid-2010", "mid-2010,",
                     "locked,", "activation", "locked.", "keys", "chassis",
                     "display", "kb", "*screen", "screen*", "*display", "display*",
-                    "*cracked*"]
+                    "*cracked*", "2009", "crack"]
 
 
 class storeItem:
     def __init__(self, rawData):
+
         self.rawData = rawData
         self.itemName = ''
         self.itemLink = ''
-    def getItemName():
+
+    def getItemName(self):
+
+        self.getItemTokens()
+        self.itemName = " ".join(self.tokenList)
+        return self.itemName
+
+    def getItemLink(self):
         
-        return itemName
-    def getItemLink():
-        
-        return itemLink
+        self.itemLink = str(self.rawData)[425:].split(" ")[0]
+        if(self.itemLink[0] == '"'):
+                self.itemLink = self.itemLink[1:-1]
+        else:
+                self.itemLink = self.itemLink[:-1]
+        return self.itemLink
+
+    def getItemTokens(self):
+
+        self.tokenList=str(self.rawData).lower().split(" ")[9:-7]
+        self.tokenList[0] = self.tokenList[0][15:]
+        self.tokenList[(len(self.tokenList)-1)] = self.tokenList[(len(self.tokenList)-1)][:-18]
+        for i in self.tokenList:
+            if((len(i) > 1) and (i[0] == '(')):
+                i = i[1:]
+                if (i[len(i)-1] == ')'):
+                    i = i[-1]
+
+        return self.tokenList
 
 
 postFilter=0
@@ -34,7 +57,6 @@ for i in range(4):
         for tag in tags:
             itemList.append(tag)
 
-    
     #The first filtered heading does not appear to contain any useful information
     itemList = itemList[1:]
 
@@ -43,38 +65,45 @@ for i in range(4):
 
     itemDeleted=0
     inspectFilterPass=0
+    #temp disabling the main filtering stage
+    
     for item in itemList:
-        itemDeleted=0
-        tokenList=str(item).lower().split(" ")[9:-7]
-        tokenList[0] = tokenList[0][15:]
-        tokenList[(len(tokenList)-1)] = tokenList[(len(tokenList)-1)][:-18]
-        for i in tokenList:
-            if((len(i) > 1) and (i[0] == '(')):
-                i = i[1:]
-                if (i[len(i)-1] == ')'):
-                    i = i[-1]
-            #print(i)
+
+        itemObj = storeItem(item)
+        storeItemTokens = itemObj.getItemTokens()
+
+        for i in storeItemTokens:
             if i in filteredKeywords:
                 itemList.remove(item)
                 itemDeleted=1
                 break
+    
         if(itemDeleted==0 and inspectFilterPass==1):
             #For human readable output of links which bypass the filter
             tokenList = [print(i, end=" ") for i in tokenList]
             print()
             print()
     
+
     postFilter+=len(itemList)
+
+    itemObjList = []
+    for item in itemList:
+        itemObj = storeItem(item)
+        itemObjList.append(itemObj)
+    
+    #temp disabling the output stage
+    
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
-        for item in itemList:
-            linkStr=str(item)[425:].split(" ")[0]
-            if(linkStr[0] == '"'):
-                linkStr = linkStr[1:-1]
-            else:
-                linkStr = linkStr[:-1]
-            output.write(linkStr)
+        for item in itemObjList:
+            output.write(item.getItemLink())
             output.write("\n")
+    
+
+
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
 print("Filtered {} items".format(preFilter - postFilter))
+
+
