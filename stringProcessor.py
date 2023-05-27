@@ -50,6 +50,7 @@ postFilter=0
 preFilter=0
 for i in range(4):
     with open("bin/index{}.html".format(i + 1), 'r', encoding='UTF-8') as inputFile:
+
         content = inputFile.read()
         soup = bs(content, 'lxml')
         tags = soup.find_all('a', class_='s-item__link')
@@ -63,45 +64,33 @@ for i in range(4):
     preFilter+=len(itemList)
     #print(len(itemList))
 
-    itemDeleted=0
-    inspectFilterPass=0
     #temp disabling the main filtering stage
     
-    for item in itemList:
-
-        itemObj = storeItem(item)
-        storeItemTokens = itemObj.getItemTokens()
-
-        for i in storeItemTokens:
-            if i in filteredKeywords:
-                itemList.remove(item)
-                itemDeleted=1
-                break
-    
-        if(itemDeleted==0 and inspectFilterPass==1):
-            #For human readable output of links which bypass the filter
-            tokenList = [print(i, end=" ") for i in tokenList]
-            print()
-            print()
-    
-
-    postFilter+=len(itemList)
 
     itemObjList = []
     for item in itemList:
+
+        addToObjList = 1
         itemObj = storeItem(item)
-        itemObjList.append(itemObj)
-    
-    #temp disabling the output stage
-    
+        storeItemTokens = itemObj.getItemTokens()
+        
+        for i in storeItemTokens:
+            if i in filteredKeywords:
+                addToObjList = 0
+                itemList.remove(item)
+                break
+        
+        if (addToObjList == 1):
+            itemObjList.append(itemObj)
+
+
+    postFilter+=len(itemObjList)
+
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
             output.write("\n")
     
-
-
-
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
 print("Filtered {} items".format(preFilter - postFilter))
