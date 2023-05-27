@@ -13,6 +13,7 @@ echo -n "Option: "
 read input
 }
 
+
 echo "==============Ebay Webscraper=============="
 echo Prerequisites: python3-venv, BeautifulSoup4, lxml
 sleep 1
@@ -84,6 +85,7 @@ while [ $input ]
         4)
 
             linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
+            linkTotal=$(( $linkTotal / 2 ))
             savePosition=$( cat bin/save_loc.txt )
 
             linkNum=1
@@ -105,10 +107,13 @@ while [ $input ]
                 echo "Enter 'x' to exit"
                 echo "Enter any other key to continue"
                 echo "Opening link $linkNum of $linkTotal"
+                linkName=$(( $linkNum + 1 ))
+                head -n $linkName FilteredOutput.txt | tail -1
                 hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
                 firefox $hyperLink
                 echo $linkNum > bin/save_loc.txt
-                linkNum=$(( $linkNum + 1 ))
+                #editing
+                linkNum=$(( $linkNum + 2 ))
                 read option
                 done
         ;;

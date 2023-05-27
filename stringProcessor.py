@@ -62,18 +62,14 @@ for i in range(4):
     itemList = itemList[1:]
 
     preFilter+=len(itemList)
-    #print(len(itemList))
-
-    #temp disabling the main filtering stage
-    
-
+    #Filter stage
     itemObjList = []
     for item in itemList:
 
         addToObjList = 1
         itemObj = storeItem(item)
         storeItemTokens = itemObj.getItemTokens()
-        
+
         for i in storeItemTokens:
             if i in filteredKeywords:
                 addToObjList = 0
@@ -83,16 +79,15 @@ for i in range(4):
         if (addToObjList == 1):
             itemObjList.append(itemObj)
 
-
     postFilter+=len(itemObjList)
-
+    #Output stage
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
+            output.write("\n")
+            output.write(item.getItemName())
             output.write("\n")
     
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
 print("Filtered {} items".format(preFilter - postFilter))
-
-
