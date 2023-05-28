@@ -83,7 +83,6 @@ while [ $input ]
             echo
         ;;
         4)
-
             linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
             linkTotal=$(( $linkTotal / 2 ))
             savePosition=$( cat bin/save_loc.txt )
@@ -99,7 +98,6 @@ while [ $input ]
                     linkNum=$savePosition
                 fi
             fi
-
             option='n'
             while [ $option != 'x' ]
                 do
@@ -122,6 +120,5 @@ while [ $input ]
             exit 0
         ;;
     esac
-    #clear
     Menu
     done

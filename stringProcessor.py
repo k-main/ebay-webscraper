@@ -9,7 +9,6 @@ filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "display", "kb", "*screen", "screen*", "*display", "display*",
                     "*cracked*", "2009", "crack"]
 
-
 class storeItem:
     def __init__(self, rawData):
 
@@ -44,7 +43,6 @@ class storeItem:
                     i = i[-1]
 
         return self.tokenList
-
 
 postFilter=0
 preFilter=0
@@ -87,7 +85,7 @@ for i in range(4):
             output.write("\n")
             output.write(item.getItemName())
             output.write("\n")
-    
+
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
 print("Filtered {} items".format(preFilter - postFilter))
