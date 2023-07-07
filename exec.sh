@@ -3,7 +3,7 @@ function Menu()
 {
 echo "==============Ebay Webscraper=============="
 echo
-echo "1 - Retrieve"
+echo "1 - Run"
 echo "2 - Clear bin/"
 echo "3 - Regenerate output from bulk data"
 echo "4 - Read output by page"
@@ -23,7 +23,7 @@ while [ $input ]
     do
     case $input in
         1)
-            echo Retrieve:
+            echo Run:
             echo "1) Macbooks Pros"
             echo "2) Macbooks & Macbook Pros"
             read entry
