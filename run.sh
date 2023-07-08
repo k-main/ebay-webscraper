@@ -16,6 +16,7 @@ read input
 
 echo "==============Ebay Webscraper=============="
 echo Prerequisites: python3-venv, BeautifulSoup4, lxml
+source env/bin/activate
 sleep 1
 clear
 Menu
