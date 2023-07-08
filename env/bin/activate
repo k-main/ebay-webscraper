@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/ken/Code/EbayScraper/env"
+VIRTUAL_ENV="/home/ken/Programming/ebay-webscraper/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

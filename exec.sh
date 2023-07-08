@@ -86,7 +86,7 @@ while [ $input ]
             linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
             linkTotal=$(( $linkTotal / 2 ))
             savePosition=$( cat bin/save_loc.txt )
-
+            iteration=1
             linkNum=1
             if [ $savePosition != '0' ]
                 then
@@ -98,13 +98,14 @@ while [ $input ]
                     linkNum=$savePosition
                 fi
             fi
+
             option='n'
             while [ $option != 'x' ]
                 do
                 clear
                 echo "Enter 'x' to exit"
                 echo "Enter any other key to continue"
-                echo "Opening link $linkNum of $linkTotal"
+                echo "Opening link $iteration of $linkTotal"
                 linkName=$(( $linkNum + 1 ))
                 head -n $linkName FilteredOutput.txt | tail -1
                 hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
@@ -112,6 +113,7 @@ while [ $input ]
                 echo $linkNum > bin/save_loc.txt
                 #editing
                 linkNum=$(( $linkNum + 2 ))
+                iteration=$(( $iteration + 1 ))
                 read option
                 done
         ;;

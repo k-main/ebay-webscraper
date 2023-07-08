@@ -20,6 +20,7 @@ class storeItem:
 
         self.getItemTokens()
         self.itemName = " ".join(self.tokenList)
+        self.itemName = self.itemName[12:-9] #extra fat from styling changes stripped off, editing token list was impacting filter
         return self.itemName
 
     def getItemLink(self):
