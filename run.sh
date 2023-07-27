@@ -1,10 +1,12 @@
 #!/bin/bash
-
-echo "==============Ebay Webscraper=============="
+cat splash.f
 echo Prerequisites: python3-venv, BeautifulSoup4, lxml
+echo Enabling virtual environment..
 source env/bin/activate
 
 function Execute(){
+    clear
+    cat splash.f
     echo Run:
     echo "1) Macbooks Pros"
     echo "2) Macbooks & Macbook Pros"
@@ -19,6 +21,7 @@ function Execute(){
             pageNum=5
         ;;
     esac
+    cat splash.f
     echo Retrieving bulk data via wget...
     echo Clearing FilteredOutput.txt...
     echo Clearing bin/save_loc.txt...
@@ -27,9 +30,11 @@ function Execute(){
     echo '0' > bin/save_loc.txt
     pageLim=$(( $pageNum + 3 ))
     fileNum=1
+    clear
     while [ $pageNum -le $pageLim ];
         do 
             clear
+            cat splash.f
             echo Retrieving bulk data via wget...
             lineNum=$( head -n $pageNum wget-links.txt | tail -1 )
             echo -n "Retrieving $fileNum/4: $lineNum"
@@ -43,6 +48,7 @@ function Execute(){
         python3 stringProcessor.py
         echo "Outputting links to FilteredOutput.txt... Done"
         echo
+        clear
 }
 
 function Clear(){
@@ -93,6 +99,7 @@ function readOutput(){
     while [ $option != 'x' ]
         do
         clear
+        cat splash.f
         echo "Enter 'x' to exit"
         echo "Enter any other key to continue"
         echo "Opening link $iteration of $linkTotal"
@@ -108,9 +115,8 @@ function readOutput(){
         done
 }
 
-function Menu()
-{
-echo "==============Ebay Webscraper=============="
+function Menu(){
+cat splash.f
 echo
 echo "1 - Run"
 echo "2 - Clear bin/"
