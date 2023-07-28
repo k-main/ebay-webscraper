@@ -4,6 +4,24 @@ echo Prerequisites: python3-venv, BeautifulSoup4, lxml
 echo Enabling virtual environment..
 source env/bin/activate
 
+checkVenv=$( apt-cache policy python3-venv | grep Installed | cut -d " " -f 4 )
+checkPip=$( apt-cache policy python3-pip | grep Installed | cut -d " " -f 4 )
+if [ $checkVenv = "(none)" ]; then echo "Fatal: python3-venv not installed"; exit 1; else echo python3-venv installed.. ${checkVenv} ; fi
+if [ $checkPip = "(none)" ]; then echo "Fatal: python3-pip not installed"; exit 1; else echo python3-pip installed.. ${checkPip}; fi
+checkLxml=$( pip show lxml )
+if [ $? = '1' ]; then echo Fatal: python3-pip package lxml not installed; exit 1; else echo lxml installed..; fi
+checkBs4=$( pip show BeautifulSoup4 )
+if [ $? = '1' ]; then echo Fatal: python3-pip package BeaituflSoup4 not intalled; exit 1; else echo BeautifulSoup4 installed..; fi
+echo Necessary packages present..
+
+if [ -d bin/pages ];
+    then
+    echo Finished setup
+    else
+    mkdir bin/pages
+    echo Finished setup
+fi
+
 function Execute(){
     clear
     cat bin/splash.f
