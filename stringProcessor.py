@@ -10,6 +10,8 @@ filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "display", "kb", "*screen", "screen*", "*display", "display*",
                     "*cracked*", "2009", "crack"]
 
+fullObjectList = []
+
 postFilter=0
 preFilter=0
 
@@ -42,19 +44,22 @@ def getObjList(itemList):
 
     return itemObjList
     
-for i in range(4):
-
-    itemList = getRawList(i) #Raw item list creation
-    preFilter+=len(itemList)
-    itemObjList = getObjList(itemList) #Object list creation
-    postFilter+=len(itemObjList)
-    #Output stage
+def writeOutput(itemObjList):
     with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
             output.write("\n")
             output.write(item.getItemName())
             output.write("\n")
+    return
+
+for i in range(4):
+    itemList = getRawList(i) #Raw item list creation
+    preFilter+=len(itemList)
+    itemObjList = getObjList(itemList) #Object list creation
+    fullObjectList+=itemObjList
+    postFilter+=len(itemObjList)
+    writeOutput(itemObjList) #Write to output
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))

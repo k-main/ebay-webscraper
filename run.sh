@@ -76,6 +76,7 @@ function Regenerate(){
         else
         echo No bulk data to regenerate from.
     fi
+    clear
 }
 
 function readOutput(){
@@ -116,16 +117,16 @@ function readOutput(){
 }
 
 function Menu(){
-cat splash.f
-echo
-echo "1 - Run"
-echo "2 - Clear bin/"
-echo "3 - Regenerate output from bulk data"
-echo "4 - Read output by page"
-echo "5 - Exit"
-echo
-echo -n "Option: "
-read input
+    cat splash.f
+    echo
+    echo "1 - Run"
+    echo "2 - Clear bin/"
+    echo "3 - Regenerate output from bulk data"
+    echo "4 - Read output by page"
+    echo "5 - Exit"
+    echo
+    echo -n "Option: "
+    read input
 }
 
 sleep 1
