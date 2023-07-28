@@ -16,7 +16,7 @@ postFilter=0
 preFilter=0
 
 def getRawList(fIndex):
-    with open("bin/index{}.html".format(fIndex + 1), 'r', encoding='UTF-8') as inputFile:
+    with open("bin/pages/index{}.html".format(fIndex + 1), 'r', encoding='UTF-8') as inputFile:
         content = inputFile.read()
         soup = bs(content, 'lxml')
         tags = soup.find_all('a', class_='s-item__link')
@@ -45,7 +45,7 @@ def getObjList(itemList):
     return itemObjList
     
 def writeOutput(itemObjList):
-    with open("FilteredOutput.txt", 'a', encoding='UTF-8') as output:
+    with open("bin/FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
             output.write("\n")

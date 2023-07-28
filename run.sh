@@ -1,12 +1,12 @@
 #!/bin/bash
-cat splash.f
+cat bin/splash.f
 echo Prerequisites: python3-venv, BeautifulSoup4, lxml
 echo Enabling virtual environment..
 source env/bin/activate
 
 function Execute(){
     clear
-    cat splash.f
+    cat bin/splash.f
     echo Run:
     echo "1) Macbooks Pros"
     echo "2) Macbooks & Macbook Pros"
@@ -21,11 +21,11 @@ function Execute(){
             pageNum=5
         ;;
     esac
-    cat splash.f
+    cat bin/splash.f
     echo Retrieving bulk data via wget...
     echo Clearing FilteredOutput.txt...
     echo Clearing bin/save_loc.txt...
-    > FilteredOutput.txt
+    > bin/FilteredOutput.txt
     > bin/save_loc.txt
     echo '0' > bin/save_loc.txt
     pageLim=$(( $pageNum + 3 ))
@@ -34,26 +34,29 @@ function Execute(){
     while [ $pageNum -le $pageLim ];
         do 
             clear
-            cat splash.f
-            echo Retrieving bulk data via wget...
-            lineNum=$( head -n $pageNum wget-links.txt | tail -1 )
-            echo -n "Retrieving $fileNum/4: $lineNum"
-            wget -q -O index$fileNum.html $lineNum
+            cat bin/splash.f
+            echo Retrieving bulk data via wget... ${fileNum}/4
+            echo
+            lineNum=$( head -n $pageNum bin/wget-links.txt | tail -1 )
+            #echo "Retrieving $fileNum/4: $lineNum"
+            wget -v -O index$fileNum.html $lineNum #change
             pageNum=$(( $pageNum + 1 ))
             fileNum=$(( $fileNum + 1 ))
         done
         echo "Pushing output to bin... Done"
-        mv index* bin/
+        mv index* bin/pages
         echo "Filtering... Done"
-        python3 stringProcessor.py
+        python3 src/stringProcessor.py
         echo "Outputting links to FilteredOutput.txt... Done"
         echo
+        echo "Press any key to continue"
+        read input
         clear
 }
 
 function Clear(){
     echo -n Clearing bin... 
-    rm bin/index* 2>> error_log.txt
+    rm bin/pages/index* 2>> bin/error_log.txt
     if [ $? == 0 ]
         then
             echo OK.
@@ -66,13 +69,15 @@ function Clear(){
 }
 
 function Regenerate(){
-    if [ -f bin/index1.html ];
+    if [ -f bin/pages/index1.html ];
         then
-        > FilteredOutput.txt
+        > bin/FilteredOutput.txt
         > bin/save_loc.txt
         echo '0' > bin/save_loc.txt
-        python3 stringProcessor.py
+        python3 src/stringProcessor.py
         echo
+        echo "Press any key to continue"
+        read input
         else
         echo No bulk data to regenerate from.
     fi
@@ -80,19 +85,20 @@ function Regenerate(){
 }
 
 function readOutput(){
-    linkTotal=$( wc -l FilteredOutput.txt | cut -d " " -f 1 )
+    linkTotal=$( wc -l bin/FilteredOutput.txt | cut -d " " -f 1 )
     linkTotal=$(( $linkTotal / 2 ))
     savePosition=$( cat bin/save_loc.txt )
     iteration=1
     linkNum=1
     if [ $savePosition != '0' ]
         then
-        echo "Continue from previous save point, $savePosition/$linkTotal? (Y/n)"
-        echo "'x' to return"
+        decodedPosition=$(( $savePosition / 2 + 1 ))
+        echo "Continue from previous save point, $decodedPosition/$linkTotal? (Y/n)"
         read val
         if [ $val != 'n' ]
             then
             linkNum=$savePosition
+            iteration=$(( $linkNum / 2 + 1 ))
         fi
     fi
 
@@ -100,13 +106,13 @@ function readOutput(){
     while [ $option != 'x' ]
         do
         clear
-        cat splash.f
+        cat bin/splash.f
         echo "Enter 'x' to exit"
         echo "Enter any other key to continue"
         echo "Opening link $iteration of $linkTotal"
         linkName=$(( $linkNum + 1 ))
-        head -n $linkName FilteredOutput.txt | tail -1
-        hyperLink=$( head -n $linkNum FilteredOutput.txt | tail -1 )
+        head -n $linkName bin/FilteredOutput.txt | tail -1
+        hyperLink=$( head -n $linkNum bin/FilteredOutput.txt | tail -1 )
         firefox $hyperLink
         echo $linkNum > bin/save_loc.txt
         #editing
@@ -117,7 +123,7 @@ function readOutput(){
 }
 
 function Menu(){
-    cat splash.f
+    cat bin/splash.f
     echo
     echo "1 - Run"
     echo "2 - Clear bin/"
