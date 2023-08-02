@@ -14,10 +14,9 @@ if [ -d "env" ];
         python3 -m venv env/
 fi
 
-
+# Checking whether or not pip, lxml, and bs4 are installed
 checkPip=$( apt-cache policy python3-pip | grep Installed | cut -d " " -f 4 )
 if [ $checkPip = "(none)" ]; then echo "Fatal: python3-pip not installed"; exit 1; else echo python3-pip installed.. ${checkPip}; fi
-
 checkLxml=$( pip show lxml )
 if [ $? = '1' ]; then echo Fatal: python3-pip package lxml not installed; exit 1; else echo lxml installed..; fi
 checkBs4=$( pip show BeautifulSoup4 )
@@ -32,6 +31,7 @@ if [ -d bin/pages ];
     echo "mkdir bin/pages"
 fi
 
+read var
 function Execute(){
     clear
     cat bin/splash.f
