@@ -53,13 +53,32 @@ def writeOutput(itemObjList):
             output.write("\n")
     return
 
+def costAnalysis(fullObjectList):
+    null_items = 0
+    half_items = 0
+    itemTotal = len(fullObjectList)
+    for item in fullObjectList:
+        details = item.getItemDetails()
+        if (len(details) == 1):
+            null_items+=1
+            print(item.getItemTokens())
+            continue
+        elif (len(details) == 2):
+            half_items+=1
+        print(details)
+        
+    print("Null items: {}, Ambiguous items: {}, Non-null items: {}".format(null_items, half_items, (itemTotal - null_items - half_items)))
+
+
 for i in range(4):
     itemList = getRawList(i) #Raw item list creation
     preFilter+=len(itemList)
     itemObjList = getObjList(itemList) #Object list creation
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
-    writeOutput(itemObjList) #Write to output
+    #writeOutput(itemObjList) #Write to output
+
+costAnalysis(fullObjectList)   
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))

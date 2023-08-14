@@ -31,7 +31,6 @@ if [ -d bin/pages ];
     echo "mkdir bin/pages"
 fi
 
-read var
 function Execute(){
     clear
     cat bin/splash.f
