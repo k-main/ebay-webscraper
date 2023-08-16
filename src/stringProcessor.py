@@ -76,7 +76,7 @@ for i in range(4):
     itemObjList = get_objlist(itemList) #Object list creation
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
-    #write_output(itemObjList) #Write to output
+    write_output(itemObjList) #Write to output
 
 item_categorization(fullObjectList)   
 
