@@ -15,7 +15,7 @@ fullObjectList = []
 postFilter=0
 preFilter=0
 
-def getRawList(fIndex):
+def get_rawlist(fIndex):
     with open("bin/pages/index{}.html".format(fIndex + 1), 'r', encoding='UTF-8') as inputFile:
         content = inputFile.read()
         soup = bs(content, 'lxml')
@@ -28,7 +28,7 @@ def getRawList(fIndex):
     itemList = itemList[1:]
     return itemList
 
-def getObjList(itemList):
+def get_objlist(itemList):
     itemObjList = []
     for item in itemList:
         addToObjList = 1
@@ -44,7 +44,7 @@ def getObjList(itemList):
 
     return itemObjList
     
-def writeOutput(itemObjList):
+def write_output(itemObjList):
     with open("bin/FilteredOutput.txt", 'a', encoding='UTF-8') as output:
         for item in itemObjList:
             output.write(item.getItemLink())
@@ -53,7 +53,7 @@ def writeOutput(itemObjList):
             output.write("\n")
     return
 
-def costAnalysis(fullObjectList):
+def item_categorization(fullObjectList):
     null_items = 0
     half_items = 0
     itemTotal = len(fullObjectList)
@@ -61,7 +61,7 @@ def costAnalysis(fullObjectList):
         details = item.getItemDetails()
         if (len(details) == 1):
             null_items+=1
-            print(item.getItemTokens())
+            #print(item.getItemTokens())
             continue
         elif (len(details) == 2):
             half_items+=1
@@ -71,14 +71,14 @@ def costAnalysis(fullObjectList):
 
 
 for i in range(4):
-    itemList = getRawList(i) #Raw item list creation
+    itemList = get_rawlist(i) #Raw item list creation
     preFilter+=len(itemList)
-    itemObjList = getObjList(itemList) #Object list creation
+    itemObjList = get_objlist(itemList) #Object list creation
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
-    #writeOutput(itemObjList) #Write to output
+    #write_output(itemObjList) #Write to output
 
-costAnalysis(fullObjectList)   
+item_categorization(fullObjectList)   
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
