@@ -35,7 +35,6 @@ class storeItem:
         self.itemDetails = []
         self.tokenSet = {}
 
-
     def getItemName(self):
         if (self.itemName == None):
             self.itemName = self.setItemName()

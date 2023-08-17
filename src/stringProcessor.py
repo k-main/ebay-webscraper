@@ -3,6 +3,12 @@ from storeItem_class import storeItem
 import subprocess
 import sqlite3
 
+
+#Wait a min, wouldn't sending over all the finalized data to an sql db
+#be better than using a text file? It would be easier to read it off in our
+#main script, but wed also have to move over some of the menu logic into a py script
+
+
 HTML_PATH = "bin/pages/"
 OUTPUT_PATH = "bin/FilteredOutput.txt"
 
@@ -53,6 +59,8 @@ def get_objlist(itemList):
                 itemList.remove(item)
                 break
         if (addToObjList == 1):
+            itemObj.setItemLink()
+            itemObj.setItemName()
             itemObjList.append(itemObj)
 
     return itemObjList
@@ -60,9 +68,9 @@ def get_objlist(itemList):
 def write_output(itemObjList):
     with open(OUTPUT_PATH, 'a', encoding='UTF-8') as output:
         for item in itemObjList:
-            output.write(item.setItemLink())
+            output.write(item.getItemLink())
             output.write("\n")
-            output.write(item.setItemName())
+            output.write(item.getItemName())
             output.write("\n")
     return
 
@@ -71,6 +79,19 @@ def item_cat(item):
     details = [item.setType(), item.setModel(), item.setYear()]
     return details
 
+def build_itemdb(item_list):
+    #[obj.itemDetails = item_cat(item) for item in item_list]
+    conn = sqlite3.connect("boards.db")
+    cursor = conn.cursor()
+
+    cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT)')
+    cursor.execute('DELETE FROM boards')
+
+    for item in item_list:
+        item.itemDetails = item_cat(item)
+        cursor.execute('INSERT INTO boards (item_name, categorization, link) VALUES (?, ?, ?)', (item.itemName, "{}, {}, {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink))
+    
+    conn.commit()
 
 for i in range(4):
     itemList = get_rawlist(i) #Raw item list creation
@@ -78,11 +99,9 @@ for i in range(4):
     itemObjList = get_objlist(itemList) #Object list creation, filtering
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
-    #[print(item_cat(item)) for item in itemObjList]
-    #write_output(itemObjList) #Write to output
+    write_output(itemObjList) #Write to output
 
-#print("Full: {}, Ambiguous: {}, null: {}".format(full, amb, null))
-
+build_itemdb(fullObjectList)
 
 
 

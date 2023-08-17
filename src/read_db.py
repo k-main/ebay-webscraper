@@ -6,3 +6,7 @@ cursor = conn.cursor()
 cursor.execute('SELECT * FROM generic_boards')
 rows = cursor.fetchall()
 [print(row) for row in rows]
+
+#cursor.execute('SELECT * FROM boards')
+#rows = cursor.fetchall()
+#[print(row) for row in rows]
