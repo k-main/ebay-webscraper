@@ -11,11 +11,13 @@ import sqlite3
 
 HTML_PATH = "bin/pages/"
 OUTPUT_PATH = "bin/FilteredOutput.txt"
+DATABASE_PATH = "src/boards.db"
 
 c_dir = str(subprocess.run("pwd", capture_output=True, text=True)).split("'")[3][:-2]
 if(c_dir[len(c_dir) - 3:] == "src"):
     HTML_PATH = "../bin/pages/"
     OUTPUT_PATH = "../bin/FilteredOutput.txt"
+    DATABASE_PATH = "boards.db"
 
 #print("{}{}".format(HTML_PATH,2))
 
@@ -81,7 +83,7 @@ def item_cat(item):
 
 def build_itemdb(item_list):
     #[obj.itemDetails = item_cat(item) for item in item_list]
-    conn = sqlite3.connect("boards.db")
+    conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
     cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT)')
