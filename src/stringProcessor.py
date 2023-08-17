@@ -1,6 +1,19 @@
 from bs4 import BeautifulSoup as bs
 from storeItem_class import storeItem
+import subprocess
+import sqlite3
 
+HTML_PATH = "bin/pages/"
+OUTPUT_PATH = "bin/FilteredOutput.txt"
+
+c_dir = str(subprocess.run("pwd", capture_output=True, text=True)).split("'")[3][:-2]
+if(c_dir[len(c_dir) - 3:] == "src"):
+    HTML_PATH = "../bin/pages/"
+    OUTPUT_PATH = "../bin/FilteredOutput.txt"
+
+#print("{}{}".format(HTML_PATH,2))
+
+#print(c_dir[len(c_dir) - 3:])
 filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "hdd", "lcd", "*lcd", "lcd*", "crack", "cracked", 
                     "screen", "2010", "2011", "2012", "2013", "2014",
@@ -16,7 +29,7 @@ postFilter=0
 preFilter=0
 
 def get_rawlist(fIndex):
-    with open("bin/pages/index{}.html".format(fIndex + 1), 'r', encoding='UTF-8') as inputFile:
+    with open("{}index{}.html".format(HTML_PATH, fIndex + 1), 'r', encoding='UTF-8') as inputFile:
         content = inputFile.read()
         soup = bs(content, 'lxml')
         tags = soup.find_all('a', class_='s-item__link')
@@ -33,7 +46,7 @@ def get_objlist(itemList):
     for item in itemList:
         addToObjList = 1
         itemObj = storeItem(item)
-        storeItemTokens = itemObj.getItemTokens()
+        storeItemTokens = itemObj.setItemTokens()
         for i in storeItemTokens:
             if i in filteredKeywords:
                 addToObjList = 0
@@ -45,40 +58,33 @@ def get_objlist(itemList):
     return itemObjList
     
 def write_output(itemObjList):
-    with open("bin/FilteredOutput.txt", 'a', encoding='UTF-8') as output:
+    with open(OUTPUT_PATH, 'a', encoding='UTF-8') as output:
         for item in itemObjList:
-            output.write(item.getItemLink())
+            output.write(item.setItemLink())
             output.write("\n")
-            output.write(item.getItemName())
+            output.write(item.setItemName())
             output.write("\n")
     return
 
-def item_categorization(fullObjectList):
-    null_items = 0
-    half_items = 0
-    itemTotal = len(fullObjectList)
-    for item in fullObjectList:
-        details = item.getItemDetails()
-        if (len(details) == 1):
-            null_items+=1
-            #print(item.getItemTokens())
-            continue
-        elif (len(details) == 2):
-            half_items+=1
-        print(details)
-        
-    print("Null items: {}, Ambiguous items: {}, Non-null items: {}".format(null_items, half_items, (itemTotal - null_items - half_items)))
+def item_cat(item):
+    item.filterTokens()
+    details = [item.setType(), item.setModel(), item.setYear()]
+    return details
 
 
 for i in range(4):
     itemList = get_rawlist(i) #Raw item list creation
     preFilter+=len(itemList)
-    itemObjList = get_objlist(itemList) #Object list creation
+    itemObjList = get_objlist(itemList) #Object list creation, filtering
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
-    write_output(itemObjList) #Write to output
+    #[print(item_cat(item)) for item in itemObjList]
+    #write_output(itemObjList) #Write to output
 
-item_categorization(fullObjectList)   
+#print("Full: {}, Ambiguous: {}, null: {}".format(full, amb, null))
+
+
+
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
