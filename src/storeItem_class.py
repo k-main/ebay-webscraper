@@ -91,6 +91,7 @@ class storeItem:
     def setModel(self):
         for token in self.tokenSet:
             if(token[0] == "a" and token[1].isdigit()):
+                token = "A" + token[1:]
                 self.itemModel = token
                 return self.itemModel
     

@@ -19,9 +19,6 @@ if(c_dir[len(c_dir) - 3:] == "src"):
     OUTPUT_PATH = "../bin/FilteredOutput.txt"
     DATABASE_PATH = "boards.db"
 
-#print("{}{}".format(HTML_PATH,2))
-
-#print(c_dir[len(c_dir) - 3:])
 filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "hdd", "lcd", "*lcd", "lcd*", "crack", "cracked", 
                     "screen", "2010", "2011", "2012", "2013", "2014",
@@ -91,7 +88,7 @@ def build_itemdb(item_list):
 
     for item in item_list:
         item.itemDetails = item_cat(item)
-        cursor.execute('INSERT INTO boards (item_name, categorization, link) VALUES (?, ?, ?)', (item.itemName, "{}, {}, {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink))
+        cursor.execute('INSERT INTO boards (item_name, categorization, link) VALUES (?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink))
     
     conn.commit()
 
