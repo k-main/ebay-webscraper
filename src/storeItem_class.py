@@ -92,7 +92,7 @@ class storeItem:
         for token in self.tokenSet:
             if(token[0] == "a" and token[1].isdigit()):
                 token = "A" + token[1:]
-                self.itemModel = token
+                self.itemModel = token[0:5]
                 return self.itemModel
     
     def setYear(self):
