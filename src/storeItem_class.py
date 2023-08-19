@@ -27,21 +27,34 @@ class storeItem:
     def __init__(self, rawData):
 
         self.rawData = rawData
-        self.itemName = ''
-        self.itemLink = ''
-        self.itemModel = 'null'
+        self.itemName = None
+        self.itemLink = None
+        self.itemModel = None
         self.itemYear = 0
-        self.type = ''
+        self.type = None
         self.itemDetails = []
         self.tokenSet = {}
-    def getItemName(self):
 
-        self.getItemTokens()
+    def getItemName(self):
+        if (self.itemName == None):
+            self.itemName = self.setItemName()
+            return self.itemName
+        else:
+            return self.itemName
+
+    def setItemName(self):
+
+        self.setItemTokens()
         self.itemName = " ".join(self.tokenList)
-        self.itemName = self.itemName[12:-9] #extra fat from styling changes stripped off, editing token list was impacting filter
         return self.itemName
 
     def getItemLink(self):
+        if(self.itemLink == None):
+            return self.setItemLink()
+        else:
+            return self.itemLink
+            
+    def setItemLink(self):
         
         self.itemLink = str(self.rawData)[425:].split(" ")[0]
         if(self.itemLink[0] == '"'):
@@ -50,54 +63,40 @@ class storeItem:
                 self.itemLink = self.itemLink[:-1]
         return self.itemLink
 
-    def getItemTokens(self):
+    def setItemTokens(self):
 
         self.tokenList=str(self.rawData).lower().split(" ")[9:-7]
         self.tokenList[0] = self.tokenList[0][27:]
         self.tokenList[(len(self.tokenList)-1)] = self.tokenList[(len(self.tokenList)-1)][:-27]
-        '''
-        for i in self.tokenList:
-            if((len(i) > 1) and (i[0] == '(')):
-                i = i[1:]
-                if (i[len(i)-1] == ')'):
-                    i = i[-1]
-        '''
         self.tokenSet = set(self.tokenList)
         return self.tokenList
 
-    def getType(self):
+    def filterTokens(self):
+        self.tokenSet.discard("apple")
+        self.tokenSet.discard("macbook")
+        new_set = []
+        [new_set.append(token) for token in self.tokenSet if len(token) >= 3]
+        self.tokenList = new_set
+        self.tokenSet = set(new_set)
+        #self.tokenSet = newSet
+
+    def setType(self):
         if ("pro" in self.tokenSet):
             self.type = "pro"
         elif ("air" in self.tokenSet):
             self.type = "air"
         
         return self.type
-
-    def getItemDetails(self):
-        itemTokens = self.getItemTokens()
-
-        self.itemDetails.append(self.getType())
-
-        for token in itemTokens:
-            if (len(self.itemDetails) == 3):
-                break
-
-            if (len(token) > 4):
-
-                if (token[0] == "a" and token[1] != "p" and token[1:5].isdigit()):
-                    model = token[0:5]
-                    self.itemDetails.append(model)
-                    self.itemModel = model
-                if(token[len(token) - 1] == ")" and token[len(token) - 5:-1].isdigit()):
-                    year = token[len(token) - 5:-1]
-                    if(int(year) <= 2030):
-                        self.itemDetails.append(year)
-                        self.itemYear = year
-
-            if(token.isdigit() and len(token) == 4 and int(token) < 2030):
-                self.itemDetails.append(token)
+    
+    def setModel(self):
+        for token in self.tokenSet:
+            if(token[0] == "a" and token[1].isdigit()):
+                token = "A" + token[1:]
+                self.itemModel = token[0:5]
+                return self.itemModel
+    
+    def setYear(self):
+        for token in self.tokenSet:
+            if(token.isdigit()):
                 self.itemYear = token
-
-
-            
-        return self.itemDetails
+                return self.itemYear
