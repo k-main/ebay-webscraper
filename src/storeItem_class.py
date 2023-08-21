@@ -34,6 +34,10 @@ class storeItem:
         self.type = None
         self.itemDetails = []
         self.tokenSet = {}
+        self.price = None
+
+    def set_price(self, price):
+        self.price = price
 
     def getItemName(self):
         if (self.itemName == None):
@@ -55,19 +59,28 @@ class storeItem:
             return self.itemLink
             
     def setItemLink(self):
-        
         self.itemLink = str(self.rawData)[425:].split(" ")[0]
         if(self.itemLink[0] == '"'):
                 self.itemLink = self.itemLink[1:-1]
         else:
                 self.itemLink = self.itemLink[:-1]
+
         return self.itemLink
+
+    
 
     def setItemTokens(self):
 
+        self.tokenList=str(self.rawData.text).split(" ")
+        self.tokenList = str(self.rawData.text).lower().split(" ")[:-6]
+        self.tokenList[(len(self.tokenList) - 1)] = self.tokenList[(len(self.tokenList) - 1)][:-5]
+
+        '''
         self.tokenList=str(self.rawData).lower().split(" ")[9:-7]
         self.tokenList[0] = self.tokenList[0][27:]
         self.tokenList[(len(self.tokenList)-1)] = self.tokenList[(len(self.tokenList)-1)][:-27]
+        '''
+
         self.tokenSet = set(self.tokenList)
         return self.tokenList
 

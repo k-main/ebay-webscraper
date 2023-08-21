@@ -37,21 +37,35 @@ def get_rawlist(fIndex):
     with open("{}index{}.html".format(HTML_PATH, fIndex + 1), 'r', encoding='UTF-8') as inputFile:
         content = inputFile.read()
         soup = bs(content, 'lxml')
-        tags = soup.find_all('a', class_='s-item__link')
+        itemTitles = soup.find_all('a', class_='s-item__link')
         itemList = []
-        for tag in tags:
-            itemList.append(tag)
+        [itemList.append(title) for title in itemTitles]
+        itemPrices = soup.find_all('span', class_='s-item__price')
+        priceList = []
+        [priceList.append(price.text) for price in itemPrices]
+        
     
     #Ignores the first filtered heading
     itemList = itemList[1:]
-    return itemList
+    priceList = priceList[1:]
+    #print(itemList[0].text)
+    #print(priceList[0])
+    #print(len(itemList))
+    #[print(price) for price in priceList]
+    #print(len(priceList))
+    #[print(item) for item in itemList]
+    return [itemList, priceList]
 
-def get_objlist(itemList):
+def get_objlist(itemList, priceList):
     itemObjList = []
+    index = 0
     for item in itemList:
         addToObjList = 1
         itemObj = storeItem(item)
+        itemObj.price = priceList[index]
         storeItemTokens = itemObj.setItemTokens()
+        print(storeItemTokens, itemObj.price)
+        index+=1
         for i in storeItemTokens:
             if i in filteredKeywords:
                 addToObjList = 0
@@ -61,6 +75,7 @@ def get_objlist(itemList):
             itemObj.setItemLink()
             itemObj.setItemName()
             itemObjList.append(itemObj)
+        
 
     return itemObjList
     
@@ -92,14 +107,16 @@ def build_itemdb(item_list):
     
     conn.commit()
 
-for i in range(4):
-    itemList = get_rawlist(i) #Raw item list creation
+for i in range(1):
+    returnArr = get_rawlist(i)
+    itemList = returnArr[0] #Raw item list creation
+    priceList = returnArr[1]
     preFilter+=len(itemList)
-    itemObjList = get_objlist(itemList) #Object list creation, filtering
+    itemObjList = get_objlist(itemList, priceList) #Object list creation, filtering
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
     write_output(itemObjList) #Write to output
-
+    
 build_itemdb(fullObjectList)
 
 
