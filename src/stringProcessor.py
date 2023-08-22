@@ -79,6 +79,7 @@ def write_output(itemObjList):
             output.write(item.getItemLink())
             output.write("\n")
             output.write(item.getItemName())
+            print(item.itemName)
             output.write("\n")
     return
 
@@ -101,6 +102,7 @@ def build_itemdb(item_list):
         cursor.execute('INSERT INTO boards (item_name, categorization, link, price) VALUES (?, ?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink, item.price))
     
     conn.commit()
+    conn.close()
 
 for i in range(4):
     returnArr = get_rawlist(i)

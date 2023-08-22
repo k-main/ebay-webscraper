@@ -47,5 +47,5 @@ def find_genericboards():
 
 
 generic_boards = find_genericboards()
-
+#read_all("boards")
 conn.close()
