@@ -92,7 +92,7 @@ def build_itemdb(item_list):
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
-    cursor.execute('DROP TABLE IF EXISTS boards')
+    #cursor.execute('DROP TABLE IF EXISTS boards')
     cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT, price TEXT)')
     cursor.execute('DELETE FROM boards')
 
