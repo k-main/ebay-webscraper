@@ -75,12 +75,6 @@ class storeItem:
         self.tokenList = str(self.rawData.text).lower().split(" ")[:-6]
         self.tokenList[(len(self.tokenList) - 1)] = self.tokenList[(len(self.tokenList) - 1)][:-5]
 
-        '''
-        self.tokenList=str(self.rawData).lower().split(" ")[9:-7]
-        self.tokenList[0] = self.tokenList[0][27:]
-        self.tokenList[(len(self.tokenList)-1)] = self.tokenList[(len(self.tokenList)-1)][:-27]
-        '''
-
         self.tokenSet = set(self.tokenList)
         return self.tokenList
 

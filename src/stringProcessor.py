@@ -48,12 +48,6 @@ def get_rawlist(fIndex):
     #Ignores the first filtered heading
     itemList = itemList[1:]
     priceList = priceList[1:]
-    #print(itemList[0].text)
-    #print(priceList[0])
-    #print(len(itemList))
-    #[print(price) for price in priceList]
-    #print(len(priceList))
-    #[print(item) for item in itemList]
     return [itemList, priceList]
 
 def get_objlist(itemList, priceList):
@@ -64,7 +58,7 @@ def get_objlist(itemList, priceList):
         itemObj = storeItem(item)
         itemObj.price = priceList[index]
         storeItemTokens = itemObj.setItemTokens()
-        print(storeItemTokens, itemObj.price)
+        #print(storeItemTokens, itemObj.price)
         index+=1
         for i in storeItemTokens:
             if i in filteredKeywords:
@@ -98,16 +92,17 @@ def build_itemdb(item_list):
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
-    cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT)')
+    cursor.execute('DROP TABLE IF EXISTS boards')
+    cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT, price TEXT)')
     cursor.execute('DELETE FROM boards')
 
     for item in item_list:
         item.itemDetails = item_cat(item)
-        cursor.execute('INSERT INTO boards (item_name, categorization, link) VALUES (?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink))
+        cursor.execute('INSERT INTO boards (item_name, categorization, link, price) VALUES (?, ?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink, item.price))
     
     conn.commit()
 
-for i in range(1):
+for i in range(4):
     returnArr = get_rawlist(i)
     itemList = returnArr[0] #Raw item list creation
     priceList = returnArr[1]
