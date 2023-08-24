@@ -79,7 +79,6 @@ def write_output(itemObjList):
             output.write(item.getItemLink())
             output.write("\n")
             output.write(item.getItemName())
-            print(item.itemName)
             output.write("\n")
     return
 

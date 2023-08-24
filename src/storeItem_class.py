@@ -1,27 +1,5 @@
 # storeItem_class.py
-
-class storeItemGeneric:
-
-    def __init__(self):
-        self.itemName = ''
-        self.itemSize = 0
-        self.itemYear = 0
-        self.itemModel = ''
-
-    def setName(self, name):
-        self.itemName = name
-
-    def setSize(self, size):
-        self.itemSize = size
-
-    def setYear(self, year):
-        self.itemYear = year
-
-    def setModel(self, model):
-        self.itemModel = model
     
-
-
 class storeItem:
 
     def __init__(self, rawData):
