@@ -32,11 +32,11 @@ def find_genericboards():
         
         if (item_desc[1:-1] == none_arr[1:]):
             continue
-  
+
         sqlcomm_str = 'SELECT * FROM generic_boards WHERE type LIKE ? AND model_num LIKE ? AND year LIKE ?'
         cursor.execute(sqlcomm_str, ('%' + det_nonestr(item_desc[0]) + '%','%' + det_nonestr(item_desc[1]) + '%','%' + det_nonestr(item_desc[2]) + '%'))
         results = cursor.fetchall()
-        
+
         #print("{} ->".format([item_desc[:-1], item_desc[3][:10]]))
         if(len(results) > 5):
             continue

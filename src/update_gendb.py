@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup as bs
-from storeItem_class import itemQuery
 import sqlite3
 import subprocess
 
@@ -34,7 +33,7 @@ def get_price(s_query):
 
 def update_prices():
 	price_dict = dict()
-	cursor.execute('SELECT * FROM  {}'.format("generic_boards"))
+	cursor.execute('SELECT * FROM generic_boards')
 	rows = cursor.fetchall()
 	#[print(search_qry(row)) for row in rows]
 	
@@ -53,7 +52,10 @@ category = &categoryId=111422&conditionId=3000&offset=0&limit=50&tabName=SOLD&tz
 
 '''
 #build_db()
-update_prices()
+#update_prices()
+cursor.execute('SELECT * FROM generic_boards LIMIT 1')
+rows = cursor.fetchall()
+subprocess.run(["wget", get_price(search_qry(rows[0]))])
 #conn.close()
 #comm_arr = ["wget", "google.com"]
 #subprocess.run(comm_arr)
