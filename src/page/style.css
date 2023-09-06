@@ -1,13 +1,14 @@
 body {
-    background-color:#363e4d;
+    background-color:#2b313d;
     font-family: Arial;
     color:white;
 }
 
 #heading {
     padding: 20px;
-    border: solid 2px;
-    border-color: #202630;
+    margin-left: 2%;
+    margin-right: 2%;
+    background-color:#363e4d;
     border-radius: 12px;
     font-weight: bold;
     display: flex;
@@ -35,7 +36,12 @@ body {
 }
 
 #items-table {
-    margin: 5%;
+    margin-top: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
+    background-color: #363e4d;
+    border-radius: 10px;
+    padding: 3%;
 }
 
 /*
