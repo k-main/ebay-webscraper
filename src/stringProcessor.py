@@ -35,43 +35,46 @@ preFilter=0
 
 def get_rawlist(fIndex):
     with open("{}index{}.html".format(HTML_PATH, fIndex + 1), 'r', encoding='UTF-8') as inputFile:
+
         content = inputFile.read()
         soup = bs(content, 'lxml')
-        itemTitles = soup.find_all('a', class_='s-item__link')
-        itemList = []
-        [itemList.append(title) for title in itemTitles]
-        itemPrices = soup.find_all('span', class_='s-item__price')
+        item_wrappers = soup.find_all('div', class_='s-item__wrapper clearfix')[1:]
+        itemList  = []
         priceList = []
-        [priceList.append(price.text) for price in itemPrices]
+        imageList = []
         
-    
-    #Ignores the first filtered heading
-    itemList = itemList[1:]
-    priceList = priceList[1:]
-    return [itemList, priceList]
+        for item_wrapper in item_wrappers:
+            item = item_wrapper.find('a', class_='s-item__link')
+            price = item_wrapper.find('span', class_='s-item__price').text
+            img = str(item_wrapper.find('img')).split("src")[1][2:].split('"')[0]
 
-def get_objlist(itemList, priceList):
-    itemObjList = []
-    index = 0
-    for item in itemList:
+            itemObj = storeItem(item)
+            itemObj.set_price(price)
+            itemObj.set_image(img)
+
+            itemList.append(itemObj)
+
+
+    return itemList
+    
+def get_objlist(itemObjList):
+    filteredList = []
+    for item in itemObjList:
         addToObjList = 1
-        itemObj = storeItem(item)
-        itemObj.price = priceList[index]
-        storeItemTokens = itemObj.setItemTokens()
-        #print(storeItemTokens, itemObj.price)
-        index+=1
+        storeItemTokens = item.setItemTokens()
+        
         for i in storeItemTokens:
             if i in filteredKeywords:
                 addToObjList = 0
-                itemList.remove(item)
+                itemObjList.remove(item)
                 break
         if (addToObjList == 1):
-            itemObj.setItemLink()
-            itemObj.setItemName()
-            itemObjList.append(itemObj)
-        
+            item.setItemLink()
+            item.setItemName()
+            filteredList.append(item)
 
-    return itemObjList
+
+    return filteredList
     
 def write_output(itemObjList):
     with open(OUTPUT_PATH, 'a', encoding='UTF-8') as output:
@@ -92,23 +95,21 @@ def build_itemdb(item_list):
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
-    #cursor.execute('DROP TABLE IF EXISTS boards')
-    cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT, price TEXT)')
+    cursor.execute('DROP TABLE IF EXISTS boards')
+    cursor.execute('CREATE TABLE IF NOT EXISTS boards (id INTEGER PRIMARY KEY, item_name TEXT, categorization TEXT, link TEXT, price TEXT, image TEXT)')
     cursor.execute('DELETE FROM boards')
-
+    
     for item in item_list:
         item.itemDetails = item_cat(item)
-        cursor.execute('INSERT INTO boards (item_name, categorization, link, price) VALUES (?, ?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink, item.price))
+        cursor.execute('INSERT INTO boards (item_name, categorization, link, price, image) VALUES (?, ?, ?, ?, ?)', (item.itemName, "{} {} {}".format(item.itemDetails[0], item.itemDetails[1], item.itemDetails[2]), item.itemLink, item.price, item.imgLink))
     
     conn.commit()
     conn.close()
 
 for i in range(4):
-    returnArr = get_rawlist(i)
-    itemList = returnArr[0] #Raw item list creation
-    priceList = returnArr[1]
+    itemList = get_rawlist(i)
     preFilter+=len(itemList)
-    itemObjList = get_objlist(itemList, priceList) #Object list creation, filtering
+    itemObjList = get_objlist(itemList) #Object list creation, filtering
     fullObjectList+=itemObjList
     postFilter+=len(itemObjList)
     write_output(itemObjList) #Write to output
@@ -119,4 +120,4 @@ build_itemdb(fullObjectList)
 
 print("Unfiltered item list length: {}".format(preFilter))
 print("Filtered list length: {}".format(postFilter))
-print("Filtered {} items".format(preFilter - postFilter))
+print("Filtered {} items / {}% of total items".format((preFilter - postFilter), str(100*(1 - postFilter/preFilter))[0:5]))

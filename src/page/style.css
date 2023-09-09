@@ -33,6 +33,7 @@ body {
 
 .heading-item:hover {
     color: lightblue;
+    cursor: pointer;
 }
 
 #items-table {
@@ -43,6 +44,30 @@ body {
     border-radius: 10px;
     padding: 3%;
 }
+
+#items-table-row {
+    display:flex;
+}
+
+.item-card {
+    background-color: #2b313d;
+    font-family: arial;
+    text-align: center;
+    margin-left: 2%;
+    margin-right: 2%;
+    padding: 3%;
+    font-weight:bold;
+}
+
+#items-table-col {
+    width:20%;
+}
+
+#card-placeholder {
+    width:20%;
+}
+
+
 
 /*
 .dropdown-button {

@@ -7,12 +7,16 @@ class storeItem:
         self.rawData = rawData
         self.itemName = None
         self.itemLink = None
+        self.imgLink = None
         self.itemModel = None
         self.itemYear = 0
         self.type = None
         self.itemDetails = []
         self.tokenSet = {}
         self.price = None
+
+    def set_image(self, href):
+        self.imgLink = href
 
     def set_price(self, price):
         self.price = price
@@ -37,12 +41,16 @@ class storeItem:
             return self.itemLink
             
     def setItemLink(self):
+
+        '''
         self.itemLink = str(self.rawData)[425:].split(" ")[0]
-        if(self.itemLink[0] == '"'):
+                if(self.itemLink[0] == '"'):
                 self.itemLink = self.itemLink[1:-1]
         else:
                 self.itemLink = self.itemLink[:-1]
+        '''
 
+        self.itemLink = str(self.rawData['href'])
         return self.itemLink
 
     
