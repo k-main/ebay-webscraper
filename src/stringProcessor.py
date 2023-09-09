@@ -102,7 +102,7 @@ def build_itemdb(item_list):
     conn.commit()
     conn.close()
 
-for i in range(1):
+for i in range(4):
     itemList = get_rawlist(i)
     preFilter+=len(itemList)
     itemObjList = get_objlist(itemList) #Object list creation, filtering
