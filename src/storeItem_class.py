@@ -41,15 +41,6 @@ class storeItem:
             return self.itemLink
             
     def setItemLink(self):
-
-        '''
-        self.itemLink = str(self.rawData)[425:].split(" ")[0]
-                if(self.itemLink[0] == '"'):
-                self.itemLink = self.itemLink[1:-1]
-        else:
-                self.itemLink = self.itemLink[:-1]
-        '''
-
         self.itemLink = str(self.rawData['href'])
         return self.itemLink
 
@@ -71,7 +62,7 @@ class storeItem:
         [new_set.append(token) for token in self.tokenSet if len(token) >= 3]
         self.tokenList = new_set
         self.tokenSet = set(new_set)
-        #self.tokenSet = newSet
+
 
     def setType(self):
         if ("pro" in self.tokenSet):

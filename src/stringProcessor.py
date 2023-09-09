@@ -40,8 +40,6 @@ def get_rawlist(fIndex):
         soup = bs(content, 'lxml')
         item_wrappers = soup.find_all('div', class_='s-item__wrapper clearfix')[1:]
         itemList  = []
-        priceList = []
-        imageList = []
         
         for item_wrapper in item_wrappers:
             item = item_wrapper.find('a', class_='s-item__link')
@@ -66,7 +64,6 @@ def get_objlist(itemObjList):
         for i in storeItemTokens:
             if i in filteredKeywords:
                 addToObjList = 0
-                itemObjList.remove(item)
                 break
         if (addToObjList == 1):
             item.setItemLink()
@@ -91,7 +88,6 @@ def item_cat(item):
     return details
 
 def build_itemdb(item_list):
-    #[obj.itemDetails = item_cat(item) for item in item_list]
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
@@ -106,12 +102,12 @@ def build_itemdb(item_list):
     conn.commit()
     conn.close()
 
-for i in range(4):
+for i in range(1):
     itemList = get_rawlist(i)
     preFilter+=len(itemList)
     itemObjList = get_objlist(itemList) #Object list creation, filtering
     fullObjectList+=itemObjList
-    postFilter+=len(itemObjList)
+    postFilter+=len(itemList) - len(itemObjList)
     write_output(itemObjList) #Write to output
     
 build_itemdb(fullObjectList)
