@@ -11,10 +11,11 @@ def clear_db():
 	cursor.execute('DROP TABLE IF EXISTS generic_boards')
 
 def build_db():	
-	cursor.execute('DELETE FROM generic_boards')
+	
 
 	with open("boards.txt", 'r', encoding='UTF-8') as generic_boards:
 		cursor.execute('CREATE TABLE IF NOT EXISTS generic_boards (id INTEGER PRIMARY KEY, model_num TEXT, year TEXT, type TEXT, board_id TEXT, size TEXT, price TEXT)')
+		cursor.execute('DELETE FROM generic_boards')
 		for board in generic_boards:
 			board_arr = board.split(", ")
 			cursor.execute('INSERT INTO generic_boards (model_num, year, type, board_id, size, price) VALUES (?, ?, ?, ?, ?, ?)', (board_arr[1], board_arr[2], board_arr[3], board_arr[4], board_arr[5][0:2], "$0") )
@@ -53,9 +54,10 @@ category = &categoryId=111422&conditionId=3000&offset=0&limit=50&tabName=SOLD&tz
 '''
 #build_db()
 #update_prices()
-cursor.execute('SELECT * FROM generic_boards LIMIT 1')
+cursor.execute('SELECT * FROM generic_boards')
 rows = cursor.fetchall()
-subprocess.run(["wget", get_price(search_qry(rows[0]))])
+print = [print(row) for row in rows]
+#ubprocess.run(["wget", get_price(search_qry(rows[0]))])
 #conn.close()
 #comm_arr = ["wget", "google.com"]
 #subprocess.run(comm_arr)

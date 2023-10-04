@@ -53,7 +53,13 @@ function Execute(){
     echo Clearing FilteredOutput.txt...
     echo Clearing bin/save_loc.txt...
     > bin/FilteredOutput.txt
-    > bin/save_loc.txt
+
+    if [ -f bin/save_loc.txt ]; then
+        > bin/save_loc.txt
+    else 
+        touch bin/save_loc.txt
+    fi
+
     echo '0' > bin/save_loc.txt
     pageLim=$(( $pageNum + 3 ))
     fileNum=1
