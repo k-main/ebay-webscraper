@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as bs
 from storeItem_class import storeItem
 import subprocess
 import sqlite3
-
+import re
 
 #Wait a min, wouldn't sending over all the finalized data to an sql db
 #be better than using a text file? It would be easier to read it off in our
@@ -19,6 +19,7 @@ if(c_dir[len(c_dir) - 3:] == "src"):
     OUTPUT_PATH = "../bin/FilteredOutput.txt"
     DATABASE_PATH = "boards.db"
 
+
 filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "hdd", "lcd", "*lcd", "lcd*", "crack", "cracked", 
                     "screen", "2010", "2011", "2012", "2013", "2014",
@@ -29,6 +30,9 @@ filteredKeywords = ["locked", "a1286", "duo", "mid-2015", "mid-2009", "ic",
                     "*cracked*", "2009", "crack"]
 
 fullObjectList = []
+
+
+# old_filter_found = 0
 
 postFilter=0
 preFilter=0
@@ -54,22 +58,29 @@ def get_rawlist(fIndex):
 
 
     return itemList
+
+def bad_item(input_str):
+    filter_keywords = ["lock", "icloud", "ic", "activation",
+                       "battery", "lcd", "screen", "crack",
+                       "display", "keyboard", "logic"]
     
+    for kwd in filter_keywords:
+        if (re.search(kwd, input_str, re.IGNORECASE)):
+            return True
+
+    return False
+
 def get_objlist(itemObjList):
     filteredList = []
     for item in itemObjList:
-        addToObjList = 1
-        storeItemTokens = item.setItemTokens()
         
-        for i in storeItemTokens:
-            if i in filteredKeywords:
-                addToObjList = 0
-                break
-        if (addToObjList == 1):
-            item.setItemLink()
-            item.setItemName()
-            filteredList.append(item)
+        rawstr = str(item.rawData.text)
+        if (bad_item(rawstr) == True):
+            continue
 
+        item.setItemLink()
+        item.setItemName()
+        filteredList.append(item)
 
     return filteredList
     
@@ -102,6 +113,7 @@ def build_itemdb(item_list):
     conn.commit()
     conn.close()
 
+
 for i in range(4):
     itemList = get_rawlist(i)
     preFilter+=len(itemList)
@@ -111,7 +123,6 @@ for i in range(4):
     write_output(itemObjList) #Write to output
     
 build_itemdb(fullObjectList)
-
 
 
 print("Unfiltered item list length: {}".format(preFilter))
